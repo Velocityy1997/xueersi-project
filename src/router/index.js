@@ -3,10 +3,12 @@ import Router from 'vue-router'
 import myorder from '@/pages/myorder'
 import top from '@/components/top'
 import foot from '@/components/foot'
+import test from '@/pages/test'
 
 Vue.use(Router)
 
 export default new Router({
+    mode: 'history',
     routes: [{
             path: '/',
             name: 'myorder',
@@ -21,6 +23,11 @@ export default new Router({
             path: '/foot',
             name: 'foot',
             component: foot
+        },
+        {
+            path: '/test',
+            name: 'test',
+            component: test
         }
     ]
 })
