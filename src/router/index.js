@@ -3,7 +3,8 @@ import Router from 'vue-router'
 import myorder from '@/pages/myorder'
 import top from '@/components/top'
 import foot from '@/components/foot'
-import test from '@/pages/test'
+import shoppingcart from '@/pages/shoppingcart'
+
 
 Vue.use(Router)
 
@@ -25,9 +26,9 @@ export default new Router({
             component: foot
         },
         {
-            path: '/test',
-            name: 'test',
-            component: test
+            path: '/shoppingcart',
+            name: 'shoppingcart',
+            component: shoppingcart
         }
     ]
 })
