@@ -11,7 +11,7 @@
         @select="handleSelect"
       >
         <el-menu-item>
-            <img src="../images/logo.png" alt="">
+          <img src="../images/logo.png" alt />
         </el-menu-item>
         <el-menu-item index="1">选课中心</el-menu-item>
         <el-menu-item index="2">免费讲座</el-menu-item>
@@ -19,34 +19,47 @@
         <el-menu-item index="3">学习中心</el-menu-item>
         <el-menu-item index="4">1对1</el-menu-item>
 
-       <el-menu-item index="3">
-           <el-dropdown >
-  <span class="el-dropdown-link">
-    更多<i class="el-icon-arrow-down el-icon--right"></i>
-  </span>
-  <el-dropdown-menu slot="dropdown" >
-    <el-dropdown-item>编程社区</el-dropdown-item>
-    
-    <el-dropdown-item >逛书城</el-dropdown-item>
-    <el-dropdown-item disabled>学社团</el-dropdown-item>
-     <el-dropdown-item disabled>写代码</el-dropdown-item>
-    
-    <el-dropdown-item disabled>小组汇</el-dropdown-item>
-  </el-dropdown-menu>
-</el-dropdown>
-           
-           
-           </el-menu-item> 
-        
+        <el-menu-item index="3">
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              更多
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>编程社区</el-dropdown-item>
+
+              <el-dropdown-item>逛书城</el-dropdown-item>
+              <el-dropdown-item disabled>学社团</el-dropdown-item>
+              <el-dropdown-item disabled>写代码</el-dropdown-item>
+
+              <el-dropdown-item disabled>小组汇</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-menu-item>
       </el-menu>
     </div>
-<!-- 主体内容 -->
+    <!-- 主体内容 -->
     <div
       class="myorder-content"
       style="width:90% ; height:800px; background-color:white; margin:auto; margin-top:20px;padding:10px"
     >
+    <div class="item1">
+        <span class="item1_1">联报</span>
+        <span class="item1_2">一起报名，优先抢占名额</span>
+        <div class="item_course">
+           <div class="item1_checkbox">
+               <el-checkbox v-model="checked"></el-checkbox>
+               </div> 
+        <p class="item_coursename">该课程的名字</p>
+       <span class="item_coursetimes">共几讲</span>
+       <p class="item_courseprice">¥000</p>
+        </div>
+   
+   <div class="item_teacherpic"></div>
     </div>
-
+    <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
+    
+    </div>
 
     <!-- 底部付款定位 -->
     <div class="qzf">
@@ -73,9 +86,11 @@
 <script>
 import top from "../components/top";
 export default {
-    data:{
-
-    },
+  data: {
+      return:{
+          checked:true
+      }
+  },
   components: {
     top
   }
@@ -141,8 +156,8 @@ export default {
   color: #333;
   cursor: pointer;
 }
-.el-menu.el-menu--horizontal{
-    border-bottom: none;
+.el-menu.el-menu--horizontal {
+  border-bottom: none;
 }
 .el-menu--horizontal > .el-menu-item {
   height: 100px;
@@ -151,32 +166,97 @@ export default {
   border: none;
 }
 .el-menu--horizontal > .el-submenu .el-submenu__title {
-    height: 100px;
+  height: 100px;
   line-height: 100px;
   font-size: 16px;
   color: #333;
   cursor: pointer;
 }
-.el-menu--horizontal>.el-menu-item:not(.is-disabled):hover {
-  color:#ff010a;
-  
+.el-menu--horizontal > .el-menu-item:not(.is-disabled):hover {
+  color: #ff010a;
 }
 .el-submenu__title:hover {
-  color:#ff010a;
-  
+  color: #ff010a;
 }
-.el-menu-item .el-dropdown{
-    margin-top: -8px;
-    margin-left: 6px;
-    font-size: 16px;
+.el-menu-item .el-dropdown {
+  margin-top: -8px;
+  margin-left: 6px;
+  font-size: 16px;
+  color: #333;
+}
+.el-menu .el-menu-item img {
+  width: 230px;
+  height: 59px;
+  text-align: center;
+}
+.el-menu-item .el-dropdown:hover {
+  color: #ff010a;
+}
+.item1{
+    width: 1176px;
+    height: 170px;
+    margin-top: 20px;
+    margin-left: 20px;
+    background-color: white;
+    float: left;
+}
+.item1 .item1_1{
+    width: 32px;
+    height: 16px;
+    background-color: #f0773c;
+    font-size: 12px;
+    line-height: 14px;
+    border-radius: 2px;
+}
+.item1 .item1_2{
+    width: 143px;
+    height: 18px;
+    margin-left: 5px;
+    color: #999;
+    font-size: 14px;
+}
+.item_teacherpic{
+    width:30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #999;
+    margin-top: 25px;
+}
+.item1 .item_coursename{
+    width: 100px;
+    margin-top: 20px;
+    float: left;
     color: #333;
 }
-.el-menu .el-menu-item img{
-    width: 230px;
-    height: 59px;
-    text-align: center
+.item_course{
+    width: 1100px;
+    height: 65px;
+    margin-top: 10px;
 }
-.el-menu-item .el-dropdown:hover{
-    color:#ff010a
+.item_coursetimes{
+    margin-top: 24px;
+    margin-left: 445px;
+    font-size: 12px;
+    color: #999;
+    float: left;
+}
+.item_courseprice{
+    width:240px;
+    height: 28px;
+    margin-left: 226px;
+    margin-top: 22px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: bolder;
+    color: #f13232;
+    float: left;
+}
+.item1_checkbox{
+    width: 40px;
+    height: 20px;
+    margin-top: 20px;
+    float: left;
+
 }
 </style>
