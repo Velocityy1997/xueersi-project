@@ -4,8 +4,7 @@ import myorder from '@/pages/myorder'
 import top from '@/components/top'
 import foot from '@/components/foot'
 import shoppingcart from '@/pages/shoppingcart'
-
-
+import lalaland from "@/pages/lalaland"
 Vue.use(Router)
 
 export default new Router({
@@ -29,6 +28,11 @@ export default new Router({
             path: '/shoppingcart',
             name: 'shoppingcart',
             component: shoppingcart
+        },
+        {
+            path: '/lalaland',
+            name: 'lalaland',
+            component: lalaland
         }
     ]
 })

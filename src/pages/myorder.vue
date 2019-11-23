@@ -6,14 +6,9 @@
 
     <!-- 导航栏 -->
     <div class="headcontent" style="width:100% ; height:60px; background-color: #FF010A">
-      <el-menu
-        :default-active="activeIndex2"
-        class="el-menu-demo"
-        mode="horizontal"
-        @select="handleSelect"
-      >
+      <el-menu default-active="2" class="el-menu-demo" mode="horizontal" @select="handleSelect">
         <div class="zhongshujiaoyu">
-           <img src="../images/logo.jpg" alt="">
+          <img src="../images/logo.jpg" alt />
         </div>
         <el-menu-item index="1">学习中心</el-menu-item>
         <el-submenu index="2">
@@ -34,31 +29,75 @@
     >
       <div class="zhanghuzhongxin">订单中心</div>
       <!-- Tab插件 -->
-      <el-tabs :tab-position="tabPosition" style="height: 270px;">
-        <el-tab-pane label="我的订单">
+      <el-tabs
+        :tab-position="tabPosition"
+        v-model="activeName"
+        style="height: 100%;"
+        @tab-click="LeftClick(activeName)"
+      >
+        <el-tab-pane label="我的订单" name="one">
           <span class="dingdan">我的订单</span>
+            <div class="dingdan_content">
+      <div :class="n==1?class1:class2" @click="btn(1)">全部订单</div>
+      <div :class="n==2?class1:class2" @click="btn(2)">已支付</div>
+      <div :class="n==3?class1:class2" @click="btn(3)">未支付</div>
+      <div :class="n==4?class1:class2" @click="btn(4)">已取消</div>
 
-          <el-tabs v-model="activeName" @tab-click="handleClick" class="dingdanlist">
-            <el-tab-pane label="全部订单" name="first">全部订单</el-tab-pane>
-            <el-tab-pane label="已支付" name="second">已支付</el-tab-pane>
-            <el-tab-pane label="未完成 " name="third">未完成</el-tab-pane>
-            <el-tab-pane label="待支付" name="fourth">待支付</el-tab-pane>
-            <el-tab-pane label="已取消" name="fifth">已取消</el-tab-pane>
-          </el-tabs>
+      <div v-if="n==1" class="twomenu">
+          <div class="item1_course">
+                <p class="item1_coursename">课程名</p>
+                <span class="item1_coursetimes">共几讲</span>
+                <p class="item1_courseprice">¥000</p>
+              </div>
+      </div>
+      <div v-if="n==2" class="twomenu">
+          <div class="item1_course">
+                <p class="item1_coursename">已支付课程名</p>
+                <span class="item1_coursetimes">共几讲</span>
+                <p class="item1_courseprice">¥000</p>
+              </div>
+      </div>
+      <div v-if="n==3" class="twomenu">
+          <div class="item1_course">
+                <p class="item1_coursename">未支付课程名</p>
+                <span class="item1_coursetimes">共几讲</span>
+                <p class="item1_courseprice">¥000</p>
+              </div>
+      </div>
+      <div v-if="n==4" class="twomenu">
+          <div class="item1_course">
+                <p class="item1_coursename">已取消课程名</p>
+                <span class="item1_coursetimes">共几讲</span>
+                <p class="item1_courseprice">¥000</p>
+              </div>
+      </div>
+  </div>
+          
         </el-tab-pane>
-        <el-tab-pane label="我的发票">
-          <span class="dingdan">我的发票</span>
+        <el-tab-pane label="我的发票" name="two">
+          <span class="dingdan" @click="mybill()">我的发票</span>
         </el-tab-pane>
-        <el-tab-pane label="收货地址">
-          <span class="dingdan">地址管理</span>
+        <el-tab-pane label="收货地址" name="three">
+          <span class="dingdan">
+            <el-button type="primary" style="margin-left:898px">新增收货地址</el-button>
+            <div class="address_content">
+              <div class="address_content_msg" v-for="(item,index) in addresslist" :key='index'>
+                <p class="address_content_name">{{item.name}}</p>
+                <p class="address_content_pro">{{item.province}}</p>
+                <p class="address_content_tel">{{item.tel}}</p>
+                <p class="address_content_edit">编辑</p>
+                <p class="address_content_del">删除</p>
+              </div>
+            </div>
+          </span>
         </el-tab-pane>
-        <el-tab-pane label="我的余额">
+        <el-tab-pane label="我的余额" name="four">
           <span class="dingdan">我的余额</span>
         </el-tab-pane>
-        <el-tab-pane label="优惠券">
+        <el-tab-pane label="优惠券" name="five">
           <span class="dingdan">优惠券</span>
         </el-tab-pane>
-        <el-tab-pane label="第三方绑定">
+        <el-tab-pane label="第三方绑定" name="six">
           <span class="dingdan">第三方绑定</span>
         </el-tab-pane>
       </el-tabs>
@@ -71,11 +110,45 @@ import top from "../components/top";
 export default {
   data() {
     return {
-      tabPosition: "left"
+      class1:'choose CActive',
+      class2:'choose',            
+      n:1,
+      tabPosition: "left",
+      // activeIndex2:2,
+      addresslist: [],
+      activeName: "one"
     };
   },
   components: {
     top
+  },
+  methods: {
+    // handleClick() {
+    //   console.log(11);
+    // },
+    btn(item){
+            this.n=item;
+        },
+    LeftClick(val) {
+        console.log(val);
+        if(val == 'three'){
+          // let dataform=new FormData()
+          // dataform.append('userid',1)
+          this.$http.get("/api/shipping/ship",{params:{
+            userid:1
+          }})
+        .then(res => {
+          console.log(res);
+          this.addresslist = res.data.data;
+
+        });
+        }
+        
+      },
+    handleSelect() {},
+    myaddress() {
+      
+    },
   }
 };
 </script>
@@ -121,7 +194,9 @@ export default {
   height: 30px;
   margin: 15px;
   text-indent: 16px;
-  color: #666;
+  color: #333;
+  font-size: 16px;
+  font-weight: 700;
 }
 .wodeziliao {
   width: 150px;
@@ -134,14 +209,14 @@ export default {
 .el-tabs .el-tab-pane .dingdan {
   width: 1000px;
   height: 42px;
-  margin-left: 15px;
+  margin-left: 35px;
   line-height: 42px;
   color: #666;
 }
-.el-menu .el-menu-item img{
-    width: 230px;
-    height: 60px;
-    text-align: center
+.el-menu .el-menu-item img {
+  width: 230px;
+  height: 60px;
+  text-align: center;
 }
 .el-tabs__item:hover {
   color: #ff010a;
@@ -153,12 +228,169 @@ export default {
 .dingdanlist:eq(0) {
   color: #ff010a;
 }
-.zhongshujiaoyu{
-    width: 230px;
-    height: 58px;
-    padding-top: 2px;
-    background-color: #ff010a;
-    float: left;
-    margin-right: 12px;
+.zhongshujiaoyu {
+  width: 230px;
+  height: 58px;
+  padding-top: 2px;
+  background-color: #ff010a;
+  float: left;
+  margin-right: 12px;
 }
+.item1_coursename {
+  width: 100px;
+  margin-top: 20px;
+  float: left;
+  color: #333;
+}
+.item1_course {
+  width: 1100px;
+  height: 65px;
+  margin-top: -5px;
+}
+.item1_coursetimes {
+  margin-top: 24px;
+  margin-left: 445px;
+  font-size: 12px;
+  color: #999;
+  float: left;
+}
+.item1_courseprice {
+  width: 240px;
+  height: 28px;
+  margin-left: 226px;
+  margin-top: 22px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 20px;
+  font-weight: bolder;
+  color: #f13232;
+  float: left;
+}
+.item1_checkbox {
+  width: 40px;
+  height: 20px;
+  margin-top: 20px;
+  float: left;
+}
+.item1_teacherpic {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #999;
+  margin-top: 25px;
+}
+.el-tabs__header .el-tabs__nav-wrap::after {
+  background-color: white;
+}
+#pane-0 {
+  margin-left: 20px;
+}
+.address_content {
+  width: 1000px;
+  height: 500px;
+  margin-top: 15px;
+  margin-left: 40px;
+  /* background-color: aqua; */
+}
+.address_content_msg {
+  width: 960px;
+  height: 60px;
+  margin-left: 20px;
+  margin-top: 12px;
+  /* border: 1px solid #999; */
+  /* background-color: red; */
+}
+.address_content_msg:hover{
+  background-color: whitesmoke;
+}
+.address_content_name {
+  width: 100px;
+  height: 38px;
+  text-align: left;
+  font-size: 12px;
+  line-height: 38px;
+  margin-left: 5px;
+  margin-top: 10px;
+  float: left;
+}
+.address_content_pro {
+  width: 300px;
+  height: 38px;
+  text-align: left;
+  font-size: 12px;
+  line-height: 38px;
+  margin-left: 5px;
+  margin-top: 10px;
+  float: left;
+}
+.address_content_tel {
+  width: 100px;
+  height: 38px;
+  text-align: left;
+  font-size: 12px;
+  line-height: 38px;
+  margin-left: 5px;
+  margin-top: 10px;
+  float: left;
+}
+.address_content_edit{
+  width: 24px;
+  height: 38px;
+  font-size: 12px;
+  margin-left: 350px;
+  margin-top: 10px;
+  line-height: 38px;
+  float: left;
+  color: #999;
+  cursor: pointer;
+}
+.address_content_del {
+  width: 24px;
+  height: 38px;
+  font-size: 12px;
+  margin-left: 38px;
+  margin-top: 10px;
+  line-height: 38px;
+  float: left;
+  color: #999;
+  cursor: pointer;
+}
+.choose{
+    width: 50px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    margin-right: 40px;
+    color: #666;
+    /* background-color: greenyellow; */
+    /* border-radius: 5px; */
+    float: left;
+    cursor: pointer;
+}
+.CActive{
+/* background-color: red; */
+color: #f13232;
+border-bottom: 2px solid #f13232;
+cursor: pointer;
+}
+.dingdan_content{
+  width: 1000px;
+  height: 800px;
+  /* background-color: pink; */
+  margin-top: 10px;
+  margin-left: 35px;
+}
+
+
+.twomenu{
+    clear: both;
+    width: 1000px;
+    height: 500px;
+    /* border:4px solid red; */
+    /* border-radius: 5px; */
+    margin-top: 100px;
+    padding-top: 20px;
+}
+
 </style>
