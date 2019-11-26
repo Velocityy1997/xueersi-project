@@ -20,7 +20,13 @@ module.exports = {
                 target: 'http://192.168.31.151:8181',
                 changeOrigin: true,
                 pathRewrite: { '^/ksp': "http://192.168.31.151:8181" }
+            },
+            '/change': {
+                target: 'http://192.168.31.25:8080',
+                changeOrigin: true,
+                pathRewrite: { '^/change': "http://192.168.31.25:8080" }
             }
+
         },
 
         // Various Dev Server settings

@@ -37,66 +37,119 @@
       >
         <el-tab-pane label="我的订单" name="one">
           <span class="dingdan">我的订单</span>
-            <div class="dingdan_content">
-      <div :class="n==1?class1:class2" @click="btn(1)">全部订单</div>
-      <div :class="n==2?class1:class2" @click="btn(2)">已支付</div>
-      <div :class="n==3?class1:class2" @click="btn(3)">未支付</div>
-      <div :class="n==4?class1:class2" @click="btn(4)">已取消</div>
+          <div class="dingdan_content">
+            <div :class="n==1?class1:class2" @click="btn(1)">全部订单</div>
+            <div :class="n==2?class1:class2" @click="btn(2)">已支付</div>
+            <div :class="n==3?class1:class2" @click="btn(3)">未支付</div>
+            <div :class="n==4?class1:class2" @click="btn(4)">已取消</div>
 
-      <div v-if="n==1" class="twomenu">
-          <div class="item1_course">
+            <div v-if="n==1" class="twomenu">
+              <div class="item1_course">
                 <p class="item1_coursename">课程名</p>
                 <span class="item1_coursetimes">共几讲</span>
                 <p class="item1_courseprice">¥000</p>
               </div>
-      </div>
-      <div v-if="n==2" class="twomenu">
-          <div class="item1_course">
+            </div>
+            <div v-if="n==2" class="twomenu">
+              <div class="item1_course">
                 <p class="item1_coursename">已支付课程名</p>
                 <span class="item1_coursetimes">共几讲</span>
                 <p class="item1_courseprice">¥000</p>
               </div>
-      </div>
-      <div v-if="n==3" class="twomenu">
-          <div class="item1_course">
+            </div>
+            <div v-if="n==3" class="twomenu">
+              <div class="item1_course">
                 <p class="item1_coursename">未支付课程名</p>
                 <span class="item1_coursetimes">共几讲</span>
                 <p class="item1_courseprice">¥000</p>
               </div>
-      </div>
-      <div v-if="n==4" class="twomenu">
-          <div class="item1_course">
+            </div>
+            <div v-if="n==4" class="twomenu">
+              <div class="item1_course">
                 <p class="item1_coursename">已取消课程名</p>
                 <span class="item1_coursetimes">共几讲</span>
                 <p class="item1_courseprice">¥000</p>
               </div>
-      </div>
-  </div>
+            </div>
+          </div>
           
         </el-tab-pane>
-        <el-tab-pane label="我的发票" name="two">
-          <span class="dingdan" @click="mybill()">我的发票</span>
-        </el-tab-pane>
+        
         <el-tab-pane label="收货地址" name="three">
           <span class="dingdan">
-            <el-button type="primary" style="margin-left:898px">新增收货地址</el-button>
+            <el-button type="text" style="margin-left:898px" @click="show_address_form">新增收货地址</el-button>
             <div class="address_content">
-              <div class="address_content_msg" v-for="(item,index) in addresslist" :key='index'>
+              <div class="address_content_msg" v-for="(item,index) in addresslist" :key="index">
                 <p class="address_content_name">{{item.name}}</p>
                 <p class="address_content_pro">{{item.province}}</p>
                 <p class="address_content_tel">{{item.tel}}</p>
-                <p class="address_content_edit">编辑</p>
-                <p class="address_content_del">删除</p>
+                <p class="address_content_edit" @click="edit_address(item.shipping_id)">编辑</p>
+                <p class="address_content_del" @click="Delete_address(item.shipping_id)">删除</p>
               </div>
             </div>
+              <el-dialog title="新增收货地址" :visible.sync="addressVisible">
+            <!-- <div class="formaddress" v-if="show"> -->
+            <el-form :label-position="labelPosition" label-width="80px" >
+              <el-form-item label="收货人">
+                <el-input v-model="getstaffname"></el-input>
+              </el-form-item>
+              <el-form-item label="省份">
+                <el-input v-model="getstaffprovince"></el-input>
+              </el-form-item>
+              <el-form-item label="城市">
+                <el-input v-model="getstaffcity"></el-input>
+              </el-form-item>
+              <el-form-item label="区/县">
+                <el-input v-model="getstaffcounty"></el-input>
+              </el-form-item>
+              <el-form-item label="详细地址">
+                <el-input v-model="getstaffdetail"></el-input>
+              </el-form-item>
+              <el-form-item label="邮政编码">
+                <el-input v-model="getstaffpostcode"></el-input>
+              </el-form-item>
+              <el-form-item label="电话">
+                <el-input v-model="getstafftel"></el-input>
+              </el-form-item>
+            </el-form>
+            <el-button type="primary" style="margin-left:130px;"  @click="confirm_address()">确定</el-button>
+          <!-- </div> -->
+            </el-dialog>
+
+            <el-dialog title="编辑收货地址" :visible.sync="editVisible">
+            <!-- <div class="formaddress" v-if="show"> -->
+            <el-form :label-position="labelPosition" label-width="80px" :data="addresslist" >
+              <el-form-item label="收货人">
+                <el-input v-model="getstaffname"></el-input>
+              </el-form-item>
+              <el-form-item label="省份">
+                <el-input v-model="getstaffprovince"></el-input>
+              </el-form-item>
+              <el-form-item label="城市">
+                <el-input v-model="getstaffcity"></el-input>
+              </el-form-item>
+              <el-form-item label="区/县">
+                <el-input v-model="getstaffcounty"></el-input>
+              </el-form-item>
+              <el-form-item label="详细地址">
+                <el-input v-model="getstaffdetail"></el-input>
+              </el-form-item>
+              <el-form-item label="邮政编码">
+                <el-input v-model="getstaffpostcode"></el-input>
+              </el-form-item>
+              <el-form-item label="电话">
+                <el-input v-model="getstafftel"></el-input>
+              </el-form-item>
+            </el-form>
+            <el-button type="primary" style="margin-left:130px;"  @click="editsure_address()">确定</el-button>
+          <!-- </div> -->
+            </el-dialog>
           </span>
         </el-tab-pane>
         <el-tab-pane label="我的余额" name="four">
           <span class="dingdan">我的余额</span>
         </el-tab-pane>
-        <el-tab-pane label="优惠券" name="five">
-          <span class="dingdan">优惠券</span>
-        </el-tab-pane>
+        
         <el-tab-pane label="第三方绑定" name="six">
           <span class="dingdan">第三方绑定</span>
         </el-tab-pane>
@@ -110,14 +163,29 @@ import top from "../components/top";
 export default {
   data() {
     return {
-      class1:'choose CActive',
-      class2:'choose',            
-      n:1,
+      class1: "choose CActive",
+      class2: "choose",
+      n: 1,
+      addressVisible:false,
+      editVisible:false,
       tabPosition: "left",
       // activeIndex2:2,
       addresslist: [],
-      activeName: "one"
+      current_addresslist:[],
+      show: false,
+      index:'',
+      activeName: "one",
+       labelPosition: 'right',
+        getstaffname:'',
+        getstaffprovince:'',
+        getstaffcity:'',
+        getstaffcounty:'',
+        getstaffdetail:'',
+        getstaffpostcode:'',
+        getstafftel:'',
+        shipId:'',
     };
+    
   },
   components: {
     top
@@ -126,31 +194,112 @@ export default {
     // handleClick() {
     //   console.log(11);
     // },
-    btn(item){
-            this.n=item;
-        },
+    btn(item) {
+      this.n = item;
+    },
     LeftClick(val) {
-        console.log(val);
-        if(val == 'three'){
-          // let dataform=new FormData()
-          // dataform.append('userid',1)
-          this.$http.get("/api/shipping/ship",{params:{
-            userid:1
-          }})
+      console.log(val);
+      if (val == "three") {
+        // let dataform=new FormData()
+        // dataform.append('userid',1)
+        this.$http
+          .get("/api/shipping/ship", {
+            params: {
+              userid: 1
+            }
+          })
+          .then(res => {
+            console.log(res);
+            this.addresslist = res.data.data;
+            
+          });
+      }
+    },
+    Delete_address(val) {
+      console.log(val)
+      this.$http
+        .delete("/api/shipping/ship", {
+          params: {
+            shipping_id: val
+          }
+        })
         .then(res => {
           console.log(res);
-          this.addresslist = res.data.data;
-
+          if(res.data.status==0){
+            this.$message.success('删除成功')
+            this.LeftClick("three");
+          }
+         
         });
-        }
         
-      },
-    handleSelect() {},
-    myaddress() {
-      
     },
-  }
-};
+    edit_address(val){
+      this.shipId=val;
+      console.log(val)
+         this.editVisible = true;
+         this.$http.get('/api/shipping/findByShipId',{params:{shipping_id:this.shipId}}).then(res=>{
+           console.log(res);
+          let editaddress = res.data.data;
+          this.getstaffname=editaddress.name
+          this.getstaffprovince=editaddress.province
+          this.getstaffcity=editaddress.city;
+          this.getstaffcounty=editaddress.county
+          this.getstaffdetail=editaddress.address
+          this.getstaffpostcode=editaddress.postCode
+          this.getstafftel=editaddress.tel
+         })
+        
+    },
+    editsure_address(){
+      console.log(this.shipId)
+       let formaddress= new FormData();
+         this.editVisible = false;
+      formaddress.append('address',this.getstaffdetail)
+      formaddress.append('city',this.getstaffcity)
+      formaddress.append('county',this.getstaffcounty)
+      formaddress.append('name',this.getstaffname)
+      formaddress.append('postCode',this.getstaffpostcode)
+      formaddress.append('province',this.getstaffprovince)
+      formaddress.append('shipping_id',this.shipId)
+      formaddress.append('tel',this.getstafftel)
+      this.$http.put("/api/shipping/ship", formaddress).then(res=>{
+        console.log(res);
+        if(res.data.status == 0){
+          this.addressVisible=false;
+          this.LeftClick('three')
+        }
+
+      })
+    },
+    confirm_address() {
+      console.log(this.getstaffname);
+      let formaddress= new FormData();
+      formaddress.append('address',this.getstaffdetail)
+      formaddress.append('city',this.getstaffcity)
+      formaddress.append('county',this.getstaffcounty)
+      formaddress.append('name',this.getstaffname)
+      formaddress.append('postCode',this.getstaffpostcode)
+      formaddress.append('province',this.getstaffprovince)
+      formaddress.append('tel',this.getstafftel)
+      
+      this.$http.post("/api/shipping/ship", formaddress).then(res=>{
+        console.log(res);
+        if(res.data.status == 0){
+          this.addressVisible=false;
+          this.LeftClick('three')
+        }
+
+      })
+    },
+     show_address_form() {
+          this.addressVisible=true;
+     },
+
+    handleSelect() {},
+    myaddress() {}
+  
+}
+}
 </script>
 
 <style>
@@ -287,7 +436,7 @@ export default {
 }
 .address_content {
   width: 1000px;
-  height: 500px;
+  /* height: 500px; */
   margin-top: 15px;
   margin-left: 40px;
   /* background-color: aqua; */
@@ -300,7 +449,7 @@ export default {
   /* border: 1px solid #999; */
   /* background-color: red; */
 }
-.address_content_msg:hover{
+.address_content_msg:hover {
   background-color: whitesmoke;
 }
 .address_content_name {
@@ -333,7 +482,7 @@ export default {
   margin-top: 10px;
   float: left;
 }
-.address_content_edit{
+.address_content_edit {
   width: 24px;
   height: 38px;
   font-size: 12px;
@@ -355,42 +504,46 @@ export default {
   color: #999;
   cursor: pointer;
 }
-.choose{
-    width: 50px;
-    height: 20px;
-    text-align: center;
-    line-height: 20px;
-    font-size: 12px;
-    margin-right: 40px;
-    color: #666;
-    /* background-color: greenyellow; */
-    /* border-radius: 5px; */
-    float: left;
-    cursor: pointer;
+.choose {
+  width: 50px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 12px;
+  margin-right: 40px;
+  color: #666;
+  /* background-color: greenyellow; */
+  /* border-radius: 5px; */
+  float: left;
+  cursor: pointer;
 }
-.CActive{
-/* background-color: red; */
-color: #f13232;
-border-bottom: 2px solid #f13232;
-cursor: pointer;
+.CActive {
+  /* background-color: red; */
+  color: #f13232;
+  border-bottom: 2px solid #f13232;
+  cursor: pointer;
 }
-.dingdan_content{
+.dingdan_content {
   width: 1000px;
-  height: 800px;
+  /* height: 800px; */
   /* background-color: pink; */
   margin-top: 10px;
   margin-left: 35px;
 }
 
-
-.twomenu{
-    clear: both;
-    width: 1000px;
-    height: 500px;
-    /* border:4px solid red; */
-    /* border-radius: 5px; */
-    margin-top: 100px;
-    padding-top: 20px;
+.twomenu {
+  clear: both;
+  width: 1000px;
+  height: 500px;
+  /* border:4px solid red; */
+  /* border-radius: 5px; */
+  margin-top: 100px;
+  padding-top: 20px;
 }
-
+.formaddress{
+  width: 400px;
+  margin-top: 50px;
+  margin-left: 50px;
+  /* display: none; */
+}
 </style>
