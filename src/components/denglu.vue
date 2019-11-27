@@ -302,11 +302,17 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           setTimeout(() => {
-            alert("注册成功");
+            let denglu = new FormData();
+            denglu.append("email", this.ruleForm2.tel);
+            denglu.append("captcha", this.ruleForm2.smscode);
+            this.$http.post("/api/users/add", denglu).then(res => {
+              console.log(res);
+              if (res.data.status == 0) {
+                this.$router.push("/shouye1");
+              }
+            });
           }, 400);
-          this.$router.push({
-            path: "/shouye1"
-          });
+      
         } else {
           console.log("error submit!!");
           return false;
