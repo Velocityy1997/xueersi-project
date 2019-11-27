@@ -12,21 +12,25 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {
             '/api': {
-                target: 'http://192.168.31.154:8080',
+                target: 'http://192.168.31.25:8080',
                 changeOrigin: true,
-                pathRewrite: { '^/api': "http://192.168.31.154:8080" }
+                pathRewrite: { '^/api': "http://192.168.31.25:8080" }
             },
             '/ksp': {
                 target: 'http://192.168.31.151:8181',
                 changeOrigin: true,
                 pathRewrite: { '^/ksp': "http://192.168.31.151:8181" }
             },
-            '/change': {
-                target: 'http://192.168.31.25:8080',
+            '/new_change': {
+                target: 'http://192.168.31.155:8080',
                 changeOrigin: true,
-                pathRewrite: { '^/change': "http://192.168.31.25:8080" }
+                pathRewrite: { '^/new_change': "http://192.168.31.155:8080" }
+            },
+            '/usertou': {
+                target: 'http://192.168.31.175:8080',
+                changeOrigin: true,
+                pathRewrite: { '^/usertou': "http://192.168.31.175:8080" }
             }
-
         },
 
         // Various Dev Server settings

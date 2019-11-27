@@ -5,7 +5,7 @@ import top from '@/components/top'
 import foot from '@/components/foot'
 import shoppingcart from '@/pages/shoppingcart'
 import lalaland from "@/pages/lalaland"
-// 马靖涵
+// 马静涵
 import footer from '@/components/footer'
 import setup from '@/components/setup'
 // 陈晓芳

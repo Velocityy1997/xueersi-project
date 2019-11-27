@@ -24,18 +24,11 @@
                      
                       <div class="youtext">
                         <el-form ref="form" :model="form" label-width="80px">
-                         <el-form-item label="用户头像"> 
+                         <el-form-item @click="touxiang" v-model="usertou" label="用户头像"> 
                             <el-upload :http-request="getuserimage" action="#" list-type="picture-card" :limit=1 >
                                 <i slot="default" class="el-icon-plus"></i>
                             </el-upload>
-                           <!-- <el-upload  class="avatar-uploader"
-                                :http-request="getuserimage"
-                                action
-                                :show-file-list="false">
-                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                </el-upload> -->
-                                 </el-form-item>
+                         </el-form-item>
                             <el-form-item label="用户姓名">
                               <el-input v-model="form.username"></el-input>
                             </el-form-item>
@@ -100,29 +93,59 @@
                     </el-form-item>
                     </el-form>
                   </div>
+
+                  <!-- <div class="mima">
+                  <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                    <el-form-item label="密码" prop="pass">
+                        <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="问题" prop="checkPass">
+                        <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="答案" prop="age">
+                        <el-input v-model.number="ruleForm.age"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                        <el-button @click="resetForm('ruleForm')">重置</el-button>
+                    </el-form-item>
+                    </el-form>
+                  </div> -->
               </el-tab-pane>
               
                <!-- 修改手机号 -->
 
-              <el-tab-pane label="修改手机号">
+              <el-tab-pane label="修改邮箱号">
                   <div class="xgmm">
-                       修改手机号
+                       修改邮箱号
                   </div>
                  
                  <div class="xgsj">
-                     
-                        <p class="phone1-text">手机号码：</p>
-                        <el-input class="sj2" placeholder="请输入手机号" v-model="phonenumber"> </el-input>
-                        <p class="phone1-text">邮箱号码：</p>
-                        <el-input class="sj2" placeholder="请输入邮箱" v-model="email"> </el-input>
-                        <p class="phone1-text">验证码：</p>
-                        <el-input class="sj1" placeholder="请输入验证码" v-model="emailcode"> </el-input>
-                        <p class="phone1-text">当前密码：</p>
-                        <el-input class="sj2" placeholder="请输入密码" v-model="cipher" show-password></el-input>
 
-                        <input type="button" value="获取验证码" class="huoqu">
+                        <el-form
+                        :model="ruleForm2"
+                        status-icon
+                        :rules="rules2"
+                        ref="ruleForm2"
+                        label-width="0"
+                        class="demo-ruleForm"
+                      >
+                        <el-form-item prop="tel">
+                          <p class="email-text">请输入邮箱号</p>
+                          <el-input v-model="ruleForm2.tel" placeholder="请输入邮箱"></el-input>
+                        </el-form-item>
+                        <el-form-item prop="smscode" class="code">
+                          <p class="email-text">请输入验证码</p>
+                          <el-input class="sr_code" v-model="ruleForm2.smscode" placeholder="验证码"></el-input>
+                          <el-button type="primary" :disabled="isDisabled" @click="sendCode">{{buttonText}}</el-button>
+                        </el-form-item>
 
-                        <input type="button" value="保存" class="baocun1" />
+                        <el-form-item>
+                          <el-button type="primary" @click="submitForm('ruleForm2')" style="width:100%;">保存</el-button>
+                          
+                        </el-form-item>
+                      </el-form>
+                                    
                  </div>
                   
 
@@ -265,17 +288,34 @@ import img2 from '@/assets/footer2.png';
 import img3 from '@/assets/footer3.png';
 export default {
   data() {
-
+      // <!--验证邮箱是否合法-->
+    let checkTel = (rule, value, callback) => {
+      // if (value === "") {
+      //   callback(new Error("请输入邮箱"));
+      // } else if (!this.checkMobile(value)) {
+      //   callback(new Error("邮箱不合法"));
+      // } else {
+      //   callback();
+      // }
+    };
+    //  <!--验证码是否为空-->
+    let checkSmscode = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入邮箱验证码"));
+      } else {
+        callback();
+      }
+    };
       var checkAge = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('年龄不能为空'));
+          return callback(new Error('密码不能为空'));
         }
         setTimeout(() => {
           if (!Number.isInteger(value)) {
             callback(new Error('请输入数字值'));
           } else {
-            if (value < 18) {
-              callback(new Error('必须年满18岁'));
+            if (value < 15) {
+              callback(new Error(''));
             } else {
               callback();
             }
@@ -294,14 +334,35 @@ export default {
       };
       var validatePass2 = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请再次输入密码'));
-        } else if (value !== this.ruleForm.pass) {
-          callback(new Error('两次输入密码不一致!'));
-        } else {
+          callback(new Error('请重新输入密码'));
+        }  else {
+          if (this.ruleForm.checkPass !== '') {
+            this.$refs.ruleForm.validateField('checkPass');
+          }
           callback();
         }
       };
     return {
+       ruleForm2: {
+        tel: "",
+        smscode: ""
+      },
+      rules2: {
+        tel: [{ validator: checkTel, trigger: "change" }],
+        smscode: [{ validator: checkSmscode, trigger: "change" }]
+      },
+      buttonText: "发送验证码",
+      isDisabled: false, // 是否禁止点击发送验证码按钮
+      flag: true,
+      class1: "choose CActive",
+      class2: "choose",
+      n: 1,
+      input3: "",
+      select: "",
+      emailcode: "",
+      inputemail: "",
+      drawer: false,
+      innerDrawer: false,
       filelist:[],
       dialogImageUrl: '',
         dialogVisible: false,
@@ -315,9 +376,11 @@ export default {
       imageUrl: '',
       input: '',
        phonenumber: '',
-       email: '',
+       oldemail: '',
+       newemail: '',
        emailcode: '',
        cipher: '',
+       usertou:'',
        postcode:'',
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
         squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
@@ -355,15 +418,31 @@ export default {
           desc: '',
           avatar:'',
           age:'',
+          yanzheng:'',
+         
+          new_email:'',
         }
       }
     },
-    created() {
-      this.$http.put('/change/Users/id/passwordHaveOrNot').then(res=>{
+    // created() {
+    //   this.$http.put('/api/Users/id/passwordHaveOrNot').then(res=>{
+    //     console.log(res);
+    //   })
+    // },
+   created(){
+     let new_changes=new FormData();
+     new_changes.append('answer',this.ruleForm.checkPass)
+     new_changes.append('new_Password',this.ruleForm.pass)
+     new_changes.append('question',this.ruleForm.age)
+
+     this.$http.put('/api/Users/id/passwordNot',new_changes).then(res=>{
+ 
         console.log(res);
-      })
-    },
+
+     })
+   },
   methods: {
+    
   new_change(){},
     getuserimage(val){
       console.log(this.imageUrl)
@@ -372,6 +451,7 @@ export default {
       this.form.avatar=val.file;
     },
     onSave(){
+      this.$alert("提交成功");
       let onSaveform=new FormData();
       onSaveform.append('address',this.form.school)
       onSaveform.append('age',this.form.age)
@@ -399,6 +479,13 @@ export default {
         this.$http.post('/api/shipping/ship',fromdata).then(res=>{
             console.log(res)
 
+        })
+      },
+      touxiang(){
+        let yhtoux=new FormData();
+        yhtoux.append('img',this.usertou)
+        this.$http.post('/usertou/upload',yhtoux).then(res=>{
+          console.log(res)
         })
       },
     handleClick(tab, event) {
@@ -434,9 +521,79 @@ export default {
       },
     onSubmit() {
         console.log('submit!');
+      },
+    btn(item) {
+      this.n = item;
+    },
+    getcode() {},
+    // <!--发送验证码-->
+
+    sendCode() {
+      let tel = this.ruleForm2.tel;
+      this.$http
+        .get("/api/users", {
+          params: { email: tel }
+        })
+        .then(res => {
+          console.log(res);
+        });
+      if (this.checkMobile(tel)) {
+        console.log(tel);
+        let time = 60;
+        this.buttonText = "已发送";
+        this.isDisabled = true;
+        if (this.flag) {
+          this.flag = false;
+          let timer = setInterval(() => {
+            time--;
+            this.buttonText = time + " 秒";
+            if (time === 0) {
+              clearInterval(timer);
+              this.buttonText = "重新获取";
+              this.isDisabled = false;
+              this.flag = true;
+            }
+          }, 1000);
+        }
+      }
+    },
+    // <!--提交注册-->
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          setTimeout(() => {
+            let denglu=new FormData()
+            denglu.append('email',this.ruleForm2.tel)
+            denglu.append('captcha',this.ruleForm2.smscode)
+            this.$http.post('/api/users/add',denglu).then(res=>{
+              console.log(res)
+              if(res.data.status==0){
+                this.$router.push('/setup');
+              }
+            })
+          }, 400);
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    // <!--进入登录页-->
+    gotoLogin() {
+      this.$router.push("/login");
+    },
+
+    // 验证邮箱
+    checkMobile(str) {
+      let re = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if (re.test(str)) {
+        return true;
+      } else {
+        return false;
       }
     }
   }
+};
 </script>
 
 <style>
@@ -668,84 +825,29 @@ export default {
       border: none;
       margin-top: 20px;
   }
-  .xgsj{
-      width: 500px;
-      height: 400px;
-      margin-top: 20px;
-      /* float: left; */
+  .email-text{
+    width: 100px;
+    line-height: 40px;
+    text-align: right;
   }
   .xgsj .el-input__inner{
-      width: 280px;
-      height: 45px;
-      margin-top: -60px;
-      margin-left: 210px;
-      /* float: left; */
-  }
-  .xgsj .sj1 .el-input__inner{
-    width: 170px;
-     margin-top: -65px;
-    float: left;
-  }
-  .phone{
-      width: 500px;
-      height: 600px;
-      
-  }
-  .phone1-text{
-      width: 80px;
-      height: 45px;
-      line-height: 45px;
-      text-align: right;
-      margin-left: 125px;
-      margin-top: 20px;
-      float: left;
-  }
-  .xgsj .el-input--suffix .el-input__inner{
-            float: left;
-  }
-  .xgsj .el-input{
-      margin-top: 20px;
-      float: left;
-  }
-  .huoqu{
-    width: 101px;
-    height: 45px;
-    line-height: 40px;
-    font-size: 16px;
-    text-align: center;
-    background-color: #8c939d;
-    border: none;
-    margin-left: 387px;
-    margin-top: -150px;
-    float: left;
-  }
-  .xgsj .el-icon-view:before{
-    margin-top: -61px;
-    float: left;
-  }
-  .xgsj .sj2 .el-input__inner{
+    width: 300px;
+    margin-left: 115px;
     margin-top: -65px;
     float: left;
   }
-  .el-col-2{
-    margin-left: 410px;
-    margin-top: -53px;
+  .xgsj .el-button--primary {
+    margin-left: 117px;
+    background-color: #F70D1A;
+    border: none;
+    width: 100px;
   }
-  .el-input--suffix .el-input__inner{
-    width: 140px;
+  .xgsj .el-form-item__content{
+    width: 100px;
   }
-  .baocun1{
-    width: 80px;
-   height: 30px;
-   background-color: #F13233;
-   color: aliceblue;
-   font-size: 16px;
-   border: none;
-   float: left;
-   margin-left: 210px;
-   margin-top: 10px;
-   border-radius: 5px;
-  }
+.xgsj .el-input__prefix, .el-input__suffix{
+  display: none
+}
   .address{
     width: 800px;
     height: 600px;
