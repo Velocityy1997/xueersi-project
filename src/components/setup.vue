@@ -24,11 +24,6 @@
                      
                       <div class="youtext">
                         <el-form ref="form" :model="form" label-width="80px">
-                         <el-form-item @click="touxiang" v-model="usertou" label="用户头像"> 
-                            <el-upload :http-request="getuserimage" action="#" list-type="picture-card" :limit=1 >
-                                <i slot="default" class="el-icon-plus"></i>
-                            </el-upload>
-                         </el-form-item>
                             <el-form-item label="用户姓名">
                               <el-input v-model="form.username"></el-input>
                             </el-form-item>
@@ -59,7 +54,7 @@
                               <el-input type="text" v-model="form.descschool"></el-input>
                             </el-form-item>
                             <el-form-item>
-                              <el-button type="primary" @click="onSave">保存</el-button>
+                              <el-button type="primary" @click="onSaveform">保存</el-button>
                               <el-button>取消</el-button>
                             </el-form-item>
                           </el-form>
@@ -78,39 +73,27 @@
                   </div>
                   <div class="mima">
                   <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                    <el-form-item label="旧密码" prop="pass">
+                    <el-form-item label="问题"  v-if="flagshow">
+                        <el-input type="text" v-model="ruleForm.question" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="答案"  v-if="flagshow">
+                        <el-input type="text" v-model="ruleForm.answer" autocomplete="off"></el-input>
+                    </el-form-item>
+                     <el-form-item label="旧密码" prop="pass">
                         <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="新密码" prop="checkPass">
                         <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="确认密码" prop="age">
-                        <el-input v-model.number="ruleForm.age"></el-input>
+                    <el-form-item label="确认密码" prop="surepass">
+                        <el-input v-model="ruleForm.surepass"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                        <el-button type="primary" @click="submitForm1('ruleForm')">提交</el-button>
                         <el-button @click="resetForm('ruleForm')">重置</el-button>
                     </el-form-item>
                     </el-form>
                   </div>
-
-                  <!-- <div class="mima">
-                  <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                    <el-form-item label="密码" prop="pass">
-                        <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="问题" prop="checkPass">
-                        <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="答案" prop="age">
-                        <el-input v-model.number="ruleForm.age"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-                        <el-button @click="resetForm('ruleForm')">重置</el-button>
-                    </el-form-item>
-                    </el-form>
-                  </div> -->
               </el-tab-pane>
               
                <!-- 修改手机号 -->
@@ -136,7 +119,7 @@
                         </el-form-item>
                         <el-form-item prop="smscode" class="code">
                           <p class="email-text">请输入验证码</p>
-                          <el-input class="sr_code" v-model="ruleForm2.smscode" placeholder="验证码"></el-input>
+                          <el-input class="sr_code" v-model="ruleForm2.smscode" placeholder=""></el-input>
                           <el-button type="primary" :disabled="isDisabled" @click="sendCode">{{buttonText}}</el-button>
                         </el-form-item>
 
@@ -168,7 +151,7 @@
                       <p class="address-text">请准确填写真实姓名</p>
                     </el-form-item>
                     <el-form-item label="所在地区">
-                      <el-select v-model="form.city" placeholder="请选择区域">
+                      <el-select class="quyu" v-model="form.city" placeholder="请选择区域">
                         <el-option label="上海" value="shanghai"></el-option>
                         <el-option label="北京" value="beijing"></el-option>
                         <el-option label="陕西" value="shanxi"></el-option>
@@ -197,7 +180,7 @@
                         <el-option label="山东" value="shandong"></el-option>
                       </el-select>
                     </el-form-item>
-                    <el-col class="line" :span="2">-</el-col>
+                  
                      <el-form-item label="详细区县">
                       <el-input type="textarea" v-model="form.province"></el-input>
                       <p class="address-text">请填写详细区县</p>
@@ -339,6 +322,7 @@ export default {
           if (this.ruleForm.checkPass !== '') {
             this.$refs.ruleForm.validateField('checkPass');
           }
+          
           callback();
         }
       };
@@ -388,8 +372,11 @@ export default {
        ruleForm: {
           pass: '',
           checkPass: '',
-          age: ''
+          surepass: '',
+          question:'',
+          answer:'',
         },
+        flagshow:false,
         rules: {
           pass: [
             { validator: validatePass, trigger: 'blur' }
@@ -402,6 +389,7 @@ export default {
           ]
         },
       form: {
+        onSaveform:'',
           name: '',
           username:'',
           phone: '',
@@ -430,12 +418,21 @@ export default {
     //   })
     // },
    created(){
-     let new_changes=new FormData();
-     new_changes.append('answer',this.ruleForm.checkPass)
-     new_changes.append('new_Password',this.ruleForm.pass)
-     new_changes.append('question',this.ruleForm.age)
+     this.$http.put('/api/Users/id/passwordHaveOrNot').then(res=>{
+        console.log(res);
+        if(res.data.status==0){
+          this.flagshow=true;
+        }else{
+          this.flagshow=false;
 
-     this.$http.put('/api/Users/id/passwordNot',new_changes).then(res=>{
+        }
+      })
+     let submitForm1=new FormData();
+     submitForm1.append('answer',this.ruleForm.checkPass)
+     submitForm1.append('new_Password',this.ruleForm.pass)
+     submitForm1.append('question',this.ruleForm.age)
+
+     this.$http.put('/api/Users/id/passwordNot',submitForm1).then(res=>{
  
         console.log(res);
 
@@ -450,8 +447,8 @@ export default {
       console.log(val);
       this.form.avatar=val.file;
     },
-    onSave(){
-      this.$alert("提交成功");
+    onSaveform(){
+      // this.$alert("提交成功");
       let onSaveform=new FormData();
       onSaveform.append('address',this.form.school)
       onSaveform.append('age',this.form.age)
@@ -461,9 +458,9 @@ export default {
       onSaveform.append('school',this.form.descschool)
       onSaveform.append('sex',this.form.resource)
       onSaveform.append('userid',1)
-      onSaveform.append('messageid',22)
-       this.$http.post('/api/user_message',onSaveform).then(res=>{
-         console.logo(res)
+      // onSaveform.append('messageid',22)
+       this.$http.post('/usertou/user_message',onSaveform).then(res=>{
+         console.log(res)
        })
     },
       onSubmit(){
@@ -476,16 +473,9 @@ export default {
         fromdata.append('province',this.city)
         fromdata.append('tel',this.phone)
 
-        this.$http.post('/api/shipping/ship',fromdata).then(res=>{
+        this.$http.post('/mjh/shipping/ship',fromdata).then(res=>{
             console.log(res)
 
-        })
-      },
-      touxiang(){
-        let yhtoux=new FormData();
-        yhtoux.append('img',this.usertou)
-        this.$http.post('/usertou/upload',yhtoux).then(res=>{
-          console.log(res)
         })
       },
     handleClick(tab, event) {
@@ -816,7 +806,7 @@ export default {
   }
   .mima{
       width: 400px;
-      height: 280px;
+      /* height: 280px;   */
       margin-left: 100px;
       margin-top: 100px;
   }
@@ -887,6 +877,9 @@ export default {
     float: left;
     margin-left: 180px;
     margin-top: -40px;
+  }
+  .quyu{
+    width: 150px;
   }
     .footer{
       width: 100%;
@@ -967,9 +960,19 @@ export default {
       margin: auto;
   }
   .footer4-1{
-      width: 84px;
+      width: 83px;
       height: 30px;
       /* float: left; */
       margin: auto
+  }
+  .email-text .el-form-item__error{
+    width: 110px;
+    top: 7%;
+    left: 127px;
+  }
+  .el-form-item__error{
+    width: 110px;
+    top: 7%;
+    left: 127px;
   }
 </style>
