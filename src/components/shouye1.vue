@@ -50,9 +50,9 @@
         <div class="neirong_item" v-for="(item,index) in allList" :key="index">
           <el-card>
             <img :src="item.image" class="image" />
-            <p class="p3_qi">{{item.length}}期内容可选</p>
+            <p class="p3">{{item.length}}期内容可选</p>
             <div class="kecheng">
-              <p class="p4_qi">{{item.type}}</p>
+              <p class="p4">{{item.type}}</p>
               <span>{{item.grade}}{{item.name}}</span>
             </div>
             <div class="kecheng1">
@@ -126,7 +126,7 @@ export default {
     },
     btn(val) {
       console.log(val);
-      this.$router.push("/detail");
+      this.$router.push("/");
     },
     imgLoad() {
       this.$nextTick(() => {
@@ -258,7 +258,7 @@ export default {
   height: 200px;
 }
 
-.p3_qi {
+.p3 {
   background-color: #cc8d7c;
   border-radius: 3px;
   position: absolute;
@@ -291,7 +291,7 @@ export default {
   margin-top: 10px;
   float: left;
 }
-.p4_qi {
+.p4 {
   border: 1px solid red;
   color: red;
   margin-right: 10px;

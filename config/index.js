@@ -26,7 +26,6 @@ module.exports = {
                 changeOrigin: true,
                 pathRewrite: { '^/ap': "http://192.168.31.29:8080" }
             }
-
         },
 
         // Various Dev Server settings

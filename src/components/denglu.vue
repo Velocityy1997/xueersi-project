@@ -302,17 +302,16 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           setTimeout(() => {
-            let denglu = new FormData();
-            denglu.append("email", this.ruleForm2.tel);
-            denglu.append("captcha", this.ruleForm2.smscode);
-            this.$http.post("/api/users/add", denglu).then(res => {
-              console.log(res);
-              if (res.data.status == 0) {
-                this.$router.push("/shouye1");
+            let denglu=new FormData()
+            denglu.append('email',this.ruleForm2.tel)
+            denglu.append('captcha',this.ruleForm2.smscode)
+            this.$http.post('/api/users/add',denglu).then(res=>{
+              console.log(res)
+              if(res.data.status==0){
+                this.$router.push('/shouye1');
               }
-            });
+            })
           }, 400);
-      
         } else {
           console.log("error submit!!");
           return false;
