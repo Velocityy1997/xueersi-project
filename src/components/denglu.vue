@@ -308,7 +308,7 @@ export default {
             this.$http.post('/api/users/add',denglu).then(res=>{
               console.log(res)
               if(res.data.status==0){
-                this.$router.push('/setup');
+                this.$router.push('/shouye1');
               }
             })
           }, 400);

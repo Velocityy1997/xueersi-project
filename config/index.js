@@ -21,15 +21,10 @@ module.exports = {
                 changeOrigin: true,
                 pathRewrite: { '^/ksp': "http://192.168.31.151:8181" }
             },
-            '/new_change': {
-                target: 'http://192.168.31.155:8080',
+            '/ap': {
+                target: 'http://192.168.31.29:8080',
                 changeOrigin: true,
-                pathRewrite: { '^/new_change': "http://192.168.31.155:8080" }
-            },
-            '/usertou': {
-                target: 'http://192.168.31.175:8080',
-                changeOrigin: true,
-                pathRewrite: { '^/usertou': "http://192.168.31.175:8080" }
+                pathRewrite: { '^/ap': "http://192.168.31.29:8080" }
             }
         },
 
