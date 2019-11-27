@@ -22,9 +22,9 @@ module.exports = {
                 pathRewrite: { '^/ksp': "http://192.168.31.151:8181" }
             },
             '/ap': {
-                target: 'http://192.168.31.32:8080',
+                target: 'http://192.168.31.29:8080',
                 changeOrigin: true,
-                pathRewrite: { '^/ap': "http://192.168.31.32:8080" }
+                pathRewrite: { '^/ap': "http://192.168.31.29:8080" }
             }
 
         },
