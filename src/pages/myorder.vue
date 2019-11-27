@@ -148,7 +148,7 @@
         </el-tab-pane>
         <el-tab-pane label="我的余额" name="four">
           <span class="dingdan">我的余额</span>
-        </el-tab-pane>
+        </el-tab-pane> 
         
         <el-tab-pane label="第三方绑定" name="six">
           <span class="dingdan">第三方绑定</span>
