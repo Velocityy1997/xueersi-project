@@ -128,12 +128,12 @@ export default {
       let datalist = new FormData();
       datalist.append("email", this.inputemail);
       datalist.append("captcha", this.emailcode);
-      this.$http.post("/api/users/id/captcha", datalist).then(res => {
+      this.$http.post("/api/users/add", datalist).then(res => {
         console.log(res);
-        // if (res.data.msg == "用户已存在") {
-        //   this.$message.success("登陆成功");
-        //   this.$router.push("/shouye1");
-        // }
+        if (res.data.msg == "用户已存在") {
+          this.$message.success("登陆成功");
+          this.$router.push("/shouye1");
+        }
       });
     },
     // <!--提交注册-->
@@ -141,15 +141,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           setTimeout(() => {
-             let password = new FormData();
-            password.append(" ", this.ruleForm2.pass);
-            password.append(" ", this.ruleForm2.checkPass);
-            this.$http.post("/api/users/id/pass", password).then(res => {
-              console.log(res);
-              if (res.data.status == 0) {
-                this.$router.push("/shouye1");
-              }
-            });
+            alert("登陆成功");
           }, 400);
           this.$router.push({
             path: "/shouye1"
