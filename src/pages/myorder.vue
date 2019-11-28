@@ -44,31 +44,31 @@
             <div :class="n==4?class1:class2" @click="btn(4)">已取消</div>
 
             <div v-if="n==1" class="twomenu">
-              <div class="item1_course">
-                <p class="item1_coursename">课程名</p>
-                <span class="item1_coursetimes">共几讲</span>
-                <p class="item1_courseprice">¥000</p>
+              <div class="item1_course" v-for="(item,index) in orderlist"  :key='index'>
+                <p class="item1_coursename">{{item.order_no}}</p>
+                <span class="item1_coursetimes">{{item.payTime}}</span>
+                <p class="item1_courseprice">¥{{item.payment}}</p>
               </div>
             </div>
             <div v-if="n==2" class="twomenu">
-              <div class="item1_course">
-                <p class="item1_coursename">已支付课程名</p>
-                <span class="item1_coursetimes">共几讲</span>
-                <p class="item1_courseprice">¥000</p>
+              <div class="item1_course" v-for="(item,index) in havepaidlist"  :key='index'>
+                <p class="item1_coursename">{{item.order_no}}</p>
+                <span class="item1_coursetimes">{{item.payTime}}</span>
+                <p class="item1_courseprice">¥{{item.payment}}</p>
               </div>
             </div>
             <div v-if="n==3" class="twomenu">
-              <div class="item1_course">
-                <p class="item1_coursename">未支付课程名</p>
-                <span class="item1_coursetimes">共几讲</span>
-                <p class="item1_courseprice">¥000</p>
+              <div class="item1_course" v-for="(item,index) in havenotpaidlist"  :key='index' >
+                <p class="item1_coursename">{{item.order_no}}</p>
+                <span class="item1_coursetimes">{{item.payTime}}</span>
+                <p class="item1_courseprice">¥{{item.payment}}</p>
               </div>
             </div>
             <div v-if="n==4" class="twomenu">
-              <div class="item1_course">
-                <p class="item1_coursename">已取消课程名</p>
-                <span class="item1_coursetimes">共几讲</span>
-                <p class="item1_courseprice">¥000</p>
+              <div class="item1_course" v-for="(item,index) in cancelledlist"  :key='index'>
+                <p class="item1_coursename">{{item.order_no}}</p>
+                <span class="item1_coursetimes">{{item.payTime}}</span>
+                <p class="item1_courseprice">¥{{item.payment}}</p>
               </div>
             </div>
           </div>
@@ -91,25 +91,25 @@
             <!-- <div class="formaddress" v-if="show"> -->
             <el-form :label-position="labelPosition" label-width="80px" >
               <el-form-item label="收货人">
-                <el-input v-model="getstaffname"></el-input>
+                <el-input v-model="getstaffnamee"></el-input>
               </el-form-item>
               <el-form-item label="省份">
-                <el-input v-model="getstaffprovince"></el-input>
+                <el-input v-model="getstaffprovincee"></el-input>
               </el-form-item>
               <el-form-item label="城市">
-                <el-input v-model="getstaffcity"></el-input>
+                <el-input v-model="getstaffcityy"></el-input>
               </el-form-item>
               <el-form-item label="区/县">
-                <el-input v-model="getstaffcounty"></el-input>
+                <el-input v-model="getstaffcountyy"></el-input>
               </el-form-item>
               <el-form-item label="详细地址">
-                <el-input v-model="getstaffdetail"></el-input>
+                <el-input v-model="getstaffdetaill"></el-input>
               </el-form-item>
               <el-form-item label="邮政编码">
-                <el-input v-model="getstaffpostcode"></el-input>
+                <el-input v-model="getstaffpostcodee"></el-input>
               </el-form-item>
               <el-form-item label="电话">
-                <el-input v-model="getstafftel"></el-input>
+                <el-input v-model="getstafftell"></el-input>
               </el-form-item>
             </el-form>
             <el-button type="primary" style="margin-left:130px;"  @click="confirm_address()">确定</el-button>
@@ -148,7 +148,7 @@
         </el-tab-pane>
         <el-tab-pane label="我的余额" name="four">
           <span class="dingdan">我的余额</span>
-        </el-tab-pane>
+        </el-tab-pane> 
         
         <el-tab-pane label="第三方绑定" name="six">
           <span class="dingdan">第三方绑定</span>
@@ -171,6 +171,10 @@ export default {
       tabPosition: "left",
       // activeIndex2:2,
       addresslist: [],
+      orderlist:[],
+      havepaidlist:[],
+      havenotpaidlist:[],
+      cancelledlist:[],
       current_addresslist:[],
       show: false,
       index:'',
@@ -184,11 +188,29 @@ export default {
         getstaffpostcode:'',
         getstafftel:'',
         shipId:'',
+        getstaffnamee:'',
+        getstaffprovincee:'',
+        getstaffcityy:'',
+        getstaffcountyy:'',
+        getstaffdetaill:'',
+        getstaffpostcodee:'',
+        getstafftell:'',
+        
     };
     
   },
   components: {
     top
+  },
+  mounted(){
+   this.$http.get('/usertou/find_order_By_Status',{params:{status:20}}).then(res=>{
+          
+          this.havepaidlist = res.data.data;
+
+          // console.log(this.havepaidlist);
+          
+        })
+
   },
   methods: {
     // handleClick() {
@@ -196,14 +218,34 @@ export default {
     // },
     btn(item) {
       this.n = item;
+      if(item==2){
+        this.$http.get('/usertou/find_order_By_Status',{params:{status:20}}).then(res=>{
+          
+          this.havepaidlist = res.data.data;
+
+          // console.log(this.havepaidlist);
+          
+        })
+      } else if(item==3){
+        this.$http.get('/usertou/find_order_By_Status',{params:{status:50}}).then(res=>{
+          console.log(res)
+          this.havenotpaidlist = res.data.data;
+        })
+      } else if(item==4){
+         this.$http.get('/usertou/find_order_By_Status',{params:{status:0}}).then(res=>{
+          this.cancelledlist = res.data.data;
+          if(this.cancelledlist.length==0){this.$message.success('无已取消订单')}
+                  })
+      }
     },
+    
     LeftClick(val) {
       console.log(val);
       if (val == "three") {
         // let dataform=new FormData()
         // dataform.append('userid',1)
         this.$http
-          .get("/api/shipping/ship", {
+          .get("/dizhi/shipping/ship", {
             params: {
               userid: 1
             }
@@ -213,12 +255,17 @@ export default {
             this.addresslist = res.data.data;
             
           });
+      }else if(val == 'one'){
+        this.$http.get('/usertou/findOrder').then(res=>{
+          console.log(res);
+          this.orderlist = res.data;
+        })
       }
     },
     Delete_address(val) {
       console.log(val)
       this.$http
-        .delete("/api/shipping/ship", {
+        .delete("/dizhi/shipping/ship", {
           params: {
             shipping_id: val
           }
@@ -237,7 +284,7 @@ export default {
       this.shipId=val;
       console.log(val)
          this.editVisible = true;
-         this.$http.get('/api/shipping/findByShipId',{params:{shipping_id:this.shipId}}).then(res=>{
+         this.$http.get('/dizhi/shipping/findByShipId',{params:{shipping_id:this.shipId}}).then(res=>{
            console.log(res);
           let editaddress = res.data.data;
           this.getstaffname=editaddress.name
@@ -262,7 +309,7 @@ export default {
       formaddress.append('province',this.getstaffprovince)
       formaddress.append('shipping_id',this.shipId)
       formaddress.append('tel',this.getstafftel)
-      this.$http.put("/api/shipping/ship", formaddress).then(res=>{
+      this.$http.put("/dizhi/shipping/ship", formaddress).then(res=>{
         console.log(res);
         if(res.data.status == 0){
           this.addressVisible=false;
@@ -274,15 +321,15 @@ export default {
     confirm_address() {
       console.log(this.getstaffname);
       let formaddress= new FormData();
-      formaddress.append('address',this.getstaffdetail)
-      formaddress.append('city',this.getstaffcity)
-      formaddress.append('county',this.getstaffcounty)
-      formaddress.append('name',this.getstaffname)
-      formaddress.append('postCode',this.getstaffpostcode)
-      formaddress.append('province',this.getstaffprovince)
-      formaddress.append('tel',this.getstafftel)
+      formaddress.append('address',this.getstaffdetaill)
+      formaddress.append('city',this.getstaffcityy)
+      formaddress.append('county',this.getstaffcountyy)
+      formaddress.append('name',this.getstaffnamee)
+      formaddress.append('postCode',this.getstaffpostcodee)
+      formaddress.append('province',this.getstaffprovincee)
+      formaddress.append('tel',this.getstafftell)
       
-      this.$http.post("/api/shipping/ship", formaddress).then(res=>{
+      this.$http.post("/dizhi/shipping/ship", formaddress).then(res=>{
         console.log(res);
         if(res.data.status == 0){
           this.addressVisible=false;
@@ -398,7 +445,7 @@ export default {
 }
 .item1_coursetimes {
   margin-top: 24px;
-  margin-left: 445px;
+  margin-left: 280px;
   font-size: 12px;
   color: #999;
   float: left;
