@@ -14,6 +14,7 @@ import shouye from '@/components/shouye'
 import shouye1 from '@/components/shouye1'
 import detail from '@/components/detail'
 import login from '@/components/login'
+import xdetail from '@/components/xdetail'
 
 
 Vue.use(Router)
@@ -75,7 +76,11 @@ export default new Router({
             name: 'detail',
             component: detail
         },
-
+        {
+            path: '/xdetail',
+            name: 'xdetail',
+            component: xdetail
+        },
         {
             path: '/shouye1',
             name: 'shouye1',

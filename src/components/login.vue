@@ -128,12 +128,12 @@ export default {
       let datalist = new FormData();
       datalist.append("email", this.inputemail);
       datalist.append("captcha", this.emailcode);
-      this.$http.post("/api/users/add", datalist).then(res => {
+      this.$http.post("/api/users/id/captcha", datalist).then(res => {
         console.log(res);
-        if (res.data.msg == "用户已存在") {
-          this.$message.success("登陆成功");
-          this.$router.push("/shouye1");
-        }
+        // if (res.data.msg == "用户已存在") {
+        //   this.$message.success("登陆成功");
+        //   this.$router.push("/shouye1");
+        // }
       });
     },
     // <!--提交注册-->
@@ -141,7 +141,15 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           setTimeout(() => {
-            alert("登陆成功");
+             let password = new FormData();
+            password.append(" ", this.ruleForm2.pass);
+            password.append(" ", this.ruleForm2.checkPass);
+            this.$http.post("/api/users/id/pass", password).then(res => {
+              console.log(res);
+              if (res.data.status == 0) {
+                this.$router.push("/shouye1");
+              }
+            });
           }, 400);
           this.$router.push({
             path: "/shouye1"
@@ -162,7 +170,6 @@ export default {
   height: 600px;
   overflow: hidden;
 }
-
 .picture {
   width: 40%;
   margin-top: 112px;
@@ -209,7 +216,6 @@ export default {
   height: 300px;
   margin-left: 30px;
 }
-
 .el-select .el-input {
   width: 130px;
 }
@@ -240,7 +246,6 @@ p {
   padding: 12px 28px;
   margin-left: -32px;
 }
-
 .mima {
   width: 305px;
   height: 300px;

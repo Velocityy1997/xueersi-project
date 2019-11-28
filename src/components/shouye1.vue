@@ -59,7 +59,7 @@
               <span class="jiage">￥{{item.price}}</span>
               <span class="qi">起</span>
             </div>
-            <el-button type="success" @click="btn(item.name)">进入课程</el-button>
+            <el-button type="success" @click="btn(item.course_id)">进入课程</el-button>
           </el-card>
         </div>
       </div>
@@ -111,22 +111,16 @@ export default {
   methods: {
     sort() {
       this.$http
-        .get("/ap/course", {
-          params: {
-            // course_id: 1,
-            // type: "",
-            // name: ""
-          }
-        })
+        .get("/ap/course")
         .then(res => {
           var data = res.data;
           this.allList = data.data;
-          console.log(data);
+          console.log(this.allList);
         });
     },
     btn(val) {
       console.log(val);
-      this.$router.push("/");
+      this.$router.push("/detail?info="+val);
     },
     imgLoad() {
       this.$nextTick(() => {
